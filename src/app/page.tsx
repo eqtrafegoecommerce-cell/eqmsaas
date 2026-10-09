@@ -78,7 +78,7 @@ export default function HomePage() {
       </section>
 
       <footer className="border-t border-slate-800 px-6 py-6 text-center text-sm text-slate-400">
-        © {new Date().getFullYear()} EQ MicroSaas. Todos os direitos reservados.
+{`© ${new Date().getFullYear()} EQ MicroSaas. Todos os direitos reservados.`}
       </footer>
     </main>
   );
