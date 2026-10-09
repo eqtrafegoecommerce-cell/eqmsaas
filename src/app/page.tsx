@@ -6,7 +6,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-slate-950 text-white">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <Link href="/" className="text-2xl font-bold">
-          EQ<span className="text-emerald-400">MicroSaas</span>
+          EQ <span className="text-orange-400">MicroSaas</span>
         </Link>
 
         <Link
@@ -19,7 +19,7 @@ export default function HomePage() {
 
       <section className="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:grid-cols-2 md:items-center">
         <div>
-          <p className="mb-4 font-semibold text-emerald-400">
+          <p className="mb-4 font-semibold text-orange-400">
             SEU NEGÓCIO, MAIS ORGANIZADO
           </p>
 
@@ -35,7 +35,7 @@ export default function HomePage() {
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/cadastro"
-              className="rounded-xl bg-emerald-400 px-6 py-3 font-bold text-slate-950 hover:bg-emerald-300"
+              className="rounded-xl bg-orange-400 px-6 py-3 font-bold text-slate-950 hover:bg-orange-300"
             >
               Criar minha loja
             </Link>
@@ -52,7 +52,7 @@ export default function HomePage() {
         <div className="rounded-3xl border border-slate-700 bg-slate-900 p-8">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-xl font-bold">Resumo dos pedidos</h2>
-            <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-sm text-emerald-400">
+            <span className="rounded-full bg-orange-400/10 px-3 py-1 text-sm text-orange-400">
               Exemplo
             </span>
           </div>
@@ -76,7 +76,7 @@ export default function HomePage() {
       </section>
 
       <footer className="border-t border-slate-800 px-6 py-6 text-center text-sm text-slate-400">
-        © {new Date().getFullYear()} EQ MicroSaas. Todos os direitos reservados.
+        © { new Date().getFullYear()} EQ MicroSaas. Todos os direitos reservados.
       </footer>
     </main>
   );
