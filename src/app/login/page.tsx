@@ -31,7 +31,10 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/dashboard");
+      router.refresh();
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
     } catch {
       setErro("Não foi possível conectar. Tente novamente.");
     } finally {

@@ -30,7 +30,7 @@ export default function PainelPage() {
     try {
       const supabase = createClient();
       await supabase.auth.signOut();
-      router.push("/"); // Ajuste para a rota de login se for o caso
+      router.push("/login");
     } catch (error) {
       console.error("Erro ao deslogar:", error);
     }
