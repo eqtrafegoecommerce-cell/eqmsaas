@@ -1,6 +1,3 @@
-export const dynamic = "force-dynamic";
-
-import FooterYear from "@/components/FooterYer";
 import Link from "next/link";
 
 export default function HomePage() {
