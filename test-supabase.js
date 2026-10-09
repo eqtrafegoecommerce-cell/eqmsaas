@@ -9,7 +9,7 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 
 async function testConnection() {
   // Tenta ler uma tabela qualquer do seu banco (ex: 'users' ou uma tabela sua)
-  const { data, error } = await supabase.from('SuaTabelaAqui').select('*').limit(1)
+  const { data, error } = await supabase.from('produtos').select('*')
 
   if (error) {
     console.error('❌ Erro ao conectar ao Supabase:', error.message)

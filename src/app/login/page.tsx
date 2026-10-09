@@ -1,10 +1,9 @@
-
 "use client";
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createClient } from "../../lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,7 +14,7 @@ export default function LoginPage() {
   const [carregando, setCarregando] = useState(false);
 
   async function entrar(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+    event.preventDefault(); // Impede o envio via GET padrão do HTML que causa o 404
     setErro("");
     setCarregando(true);
 
@@ -29,11 +28,12 @@ export default function LoginPage() {
 
       if (error) {
         setErro("E-mail ou senha inválidos. Confira os dados e tente novamente.");
+        setCarregando(false);
         return;
       }
 
-      router.replace("/painel");
-      router.refresh();
+      // Redirecionamento correto para a pasta que você escolheu manter
+      router.push("/dashboard");
     } catch {
       setErro("Não foi possível conectar. Tente novamente.");
     } finally {
@@ -66,7 +66,7 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-emerald-400"
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-emerald-400 text-slate-100"
               placeholder="voce@exemplo.com"
             />
           </div>
@@ -82,7 +82,7 @@ export default function LoginPage() {
               required
               value={senha}
               onChange={(event) => setSenha(event.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-emerald-400"
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-emerald-400 text-slate-100"
               placeholder="Digite sua senha"
             />
           </div>
