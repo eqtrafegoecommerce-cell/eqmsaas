@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Mail, Lock, Globe, ChevronDown } from "lucide-react";
 
 export default function LoginPage() {
+  const [ano, setAno] = useState<number | string>("...");
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -137,7 +138,7 @@ export default function LoginPage() {
             ← Voltar ao início
           </Link>
           <div className="text-xs text-slate-400">
-            © {new Date().getFullYear()} EQ MicroSaas. Todos os direitos reservados.
+            © {ano} EQ MicroSaas. Todos os direitos reservados.
           </div>
         </div>
       </main>
