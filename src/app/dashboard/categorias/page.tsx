@@ -1,8 +1,8 @@
-
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState, useEffect, type FormEvent } from "react";
+import {  } from "@/lib/supabase/store";
 
 type Categoria = {
   id: string;

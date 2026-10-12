@@ -6,8 +6,7 @@ export async function getStoreBySlug(slug: string) {
 
   const { data, error } = await supabase
     .from("tenants")
-    .select("id, name, description, whatsapp") // Ajuste se os nomes na sua tabela tenants forem diferentes (ex: name_store)
-    .eq("slug", slug)
+    .select("id, name, slug, logo_url, status, created_at")
     .single();
 
   if (error) {

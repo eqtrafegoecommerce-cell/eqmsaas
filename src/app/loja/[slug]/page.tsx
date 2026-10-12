@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { getStoreBySlug, getProductsByTenant } from '@/lib/supabase/store';
+import React, { useEffect, useState, use } from 'react';
 import { ShoppingBag, Search, Plus, Minus, X } from 'lucide-react';
+import { getStoreBySlug, getProductsByTenant } from '@/lib/supabase/store';
 import Checkout from './components/checkout';
+import { createOrder } from '@/lib/supabase/store';
 
 interface LojaProps {
   params: {

@@ -1,10 +1,9 @@
-
 "use client";
 
 import Link from "next/link";
 import { useMemo, useState, type FormEvent } from "react";
 
-type Produto = {
+type Products = {
   id: string;
   nome: string;
   descricao: string;
@@ -14,55 +13,9 @@ type Produto = {
   disponivel: boolean;
 };
 
-type FormularioProduto = Omit<Produto, "id">;
+type FormularioProduto = Omit<Products, "id">;
 
-const categorias = [
-  "Bolos",
-  "Doces",
-  "Salgados",
-  "Bebidas",
-  "Combos",
-  "Outros",
-];
-
-const produtosIniciais: Produto[] = [
-  {
-    id: "1",
-    nome: "Bolo de chocolate",
-    descricao: "Bolo fofinho com cobertura de brigadeiro.",
-    categoria: "Bolos",
-    preco: 55,
-    imagem: "",
-    disponivel: true,
-  },
-  {
-    id: "2",
-    nome: "Brigadeiro tradicional",
-    descricao: "Brigadeiro artesanal com chocolate granulado.",
-    categoria: "Doces",
-    preco: 3.5,
-    imagem: "",
-    disponivel: true,
-  },
-  {
-    id: "3",
-    nome: "Coxinha de frango",
-    descricao: "Massa artesanal com recheio de frango.",
-    categoria: "Salgados",
-    preco: 6,
-    imagem: "",
-    disponivel: true,
-  },
-  {
-    id: "4",
-    nome: "Kit festa",
-    descricao: "Uma opção especial para comemorações.",
-    categoria: "Combos",
-    preco: 120,
-    imagem: "",
-    disponivel: false,
-  },
-];
+const categorias = ["Bolos", "Doces", "Salgados", "Bebidas", "Combos", "Outros"];
 
 const formularioVazio: FormularioProduto = {
   nome: "",
@@ -74,49 +27,34 @@ const formularioVazio: FormularioProduto = {
 };
 
 function moeda(valor: number) {
-  return valor.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
+  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
 export default function ProdutosPage() {
-  const [produtos, setProdutos] = useState(produtosIniciais);
+  const [produtos, setProdutos] = useState<Products[]>([]);
+  const [carregando, setCarregando] = useState(false);
   const [busca, setBusca] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("Todas");
-  const [filtroDisponibilidade, setFiltroDisponibilidade] =
-    useState("Todos");
+  const [filtroDisponibilidade, setFiltroDisponibilidade] = useState("Todos");
   const [modalAberto, setModalAberto] = useState(false);
-  const [produtoEditando, setProdutoEditando] =
-    useState<string | null>(null);
-  const [formulario, setFormulario] =
-    useState<FormularioProduto>(formularioVazio);
+  const [produtoEditando, setProdutoEditando] = useState<string | null>(null);
+  const [formulario, setFormulario] = useState<FormularioProduto>(formularioVazio);
   const [erro, setErro] = useState("");
 
   const produtosFiltrados = useMemo(() => {
     const termo = busca.trim().toLowerCase();
-
     return produtos.filter((produto) => {
       const correspondeBusca =
         produto.nome.toLowerCase().includes(termo) ||
         produto.descricao.toLowerCase().includes(termo);
-
       const correspondeCategoria =
-        filtroCategoria === "Todas" ||
-        produto.categoria === filtroCategoria;
-
+        filtroCategoria === "Todas" || produto.categoria === filtroCategoria;
       const correspondeDisponibilidade =
         filtroDisponibilidade === "Todos" ||
-        (filtroDisponibilidade === "Disponíveis" &&
-          produto.disponivel) ||
-        (filtroDisponibilidade === "Indisponíveis" &&
-          !produto.disponivel);
+        (filtroDisponibilidade === "Disponíveis" && produto.disponivel) ||
+        (filtroDisponibilidade === "Indisponíveis" && !produto.disponivel);
 
-      return (
-        correspondeBusca &&
-        correspondeCategoria &&
-        correspondeDisponibilidade
-      );
+      return correspondeBusca && correspondeCategoria && correspondeDisponibilidade;
     });
   }, [produtos, busca, filtroCategoria, filtroDisponibilidade]);
 
@@ -130,7 +68,7 @@ export default function ProdutosPage() {
     setModalAberto(true);
   }
 
-  function abrirEdicao(produto: Produto) {
+  function abrirEdicao(produto: Products) {
     setProdutoEditando(produto.id);
     setFormulario({
       nome: produto.nome,
@@ -144,31 +82,16 @@ export default function ProdutosPage() {
     setModalAberto(true);
   }
 
-  function salvarProduto(event: FormEvent<HTMLFormElement>) {
+  async function salvarProduto(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setErro("");
 
     const nome = formulario.nome.trim();
+    if (!nome) return setErro("Informe o nome do produto.");
+    if (!Number.isFinite(formulario.preco) || formulario.preco <= 0) return setErro("Informe um preço maior que zero.");
+    if (formulario.imagem && !/^https?:\/\//i.test(formulario.imagem)) return setErro("Informe uma URL válida para a imagem.");
 
-    if (!nome) {
-      setErro("Informe o nome do produto.");
-      return;
-    }
-
-    if (!Number.isFinite(formulario.preco) || formulario.preco <= 0) {
-      setErro("Informe um preço maior que zero.");
-      return;
-    }
-
-    if (
-      formulario.imagem &&
-      !/^https?:\/\//i.test(formulario.imagem)
-    ) {
-      setErro("Informe uma URL válida para a imagem.");
-      return;
-    }
-
-    const dados: FormularioProduto = {
+    const dados = {
       ...formulario,
       nome,
       descricao: formulario.descricao.trim(),
@@ -198,11 +121,8 @@ export default function ProdutosPage() {
     setFormulario(formularioVazio);
   }
 
-  function excluirProduto(produto: Produto) {
-    const confirmou = window.confirm(
-      `Deseja realmente excluir "${produto.nome}"?`
-    );
-
+  async function excluirProduto(produto: Products) {
+    const confirmou = window.confirm(`Deseja realmente excluir "${produto.nome}"?`);
     if (!confirmou) return;
 
     setProdutos((atuais) =>
@@ -333,34 +253,34 @@ export default function ProdutosPage() {
               </thead>
 
               <tbody className="divide-y divide-slate-100">
-                {produtosFiltrados.map((produto) => (
-                  <tr key={produto.id} className="hover:bg-slate-50">
+                {produtosFiltrados.map((products) => (
+                  <tr key={products.id} className="hover:bg-slate-50">
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        {produto.imagem ? (
+                        {products.imagem ? (
                           <img
-                            src={produto.imagem}
-                            alt={produto.nome}
+                            src={products.imagem}
+                            alt={products.nome}
                             className="h-12 w-12 rounded-xl border border-slate-100 object-cover"
                           />
                         ) : (
                           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-xl text-emerald-700">
-                            {produto.categoria === "Bolos"
+                            {products.categoria === "Bolos"
                               ? "🎂"
-                              : produto.categoria === "Doces"
+                              : products.categoria === "Doces"
                                 ? "🍬"
-                                : produto.categoria === "Salgados"
+                                : products.categoria === "Salgados"
                                   ? "🥟"
-                                  : produto.categoria === "Bebidas"
+                                  : products.categoria === "Bebidas"
                                     ? "🥤"
                                     : "🍽️"}
                           </div>
                         )}
 
                         <div>
-                          <p className="font-semibold">{produto.nome}</p>
+                          <p className="font-semibold">{products.nome}</p>
                           <p className="mt-1 max-w-xs truncate text-xs text-slate-500">
-                            {produto.descricao || "Sem descrição"}
+                            {products.descricao || "Sem descrição"}
                           </p>
                         </div>
                       </div>
@@ -368,28 +288,28 @@ export default function ProdutosPage() {
 
                     <td className="px-5 py-4">
                       <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium">
-                        {produto.categoria}
+                        {products.categoria}
                       </span>
                     </td>
 
                     <td className="px-5 py-4 font-semibold">
-                      {moeda(produto.preco)}
+                      {moeda(products.preco)}
                     </td>
 
                     <td className="px-5 py-4">
                       <button
                         type="button"
                         onClick={() =>
-                          alternarDisponibilidade(produto.id)
+                          alternarDisponibilidade(products.id)  
                         }
-                        aria-label={`Alterar disponibilidade de ${produto.nome}`}
+                        aria-label={`Alterar disponibilidade de ${products.nome}`}
                         className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
-                          produto.disponivel
+                          products.disponivel
                             ? "bg-emerald-50 text-emerald-700"
                             : "bg-slate-100 text-slate-600"
                         }`}
                       >
-                        {produto.disponivel
+                        {products.disponivel
                           ? "Disponível"
                           : "Indisponível"}
                       </button>
@@ -399,7 +319,7 @@ export default function ProdutosPage() {
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
-                          onClick={() => abrirEdicao(produto)}
+                          onClick={() => abrirEdicao(products)}
                           className="font-semibold text-emerald-700 hover:underline"
                         >
                           Editar
@@ -407,7 +327,7 @@ export default function ProdutosPage() {
 
                         <button
                           type="button"
-                          onClick={() => excluirProduto(produto)}
+                          onClick={() => excluirProduto(products)}
                           className="font-semibold text-red-600 hover:underline"
                         >
                           Excluir

@@ -137,6 +137,7 @@ export default function PainelPage() {
           {/* Seção de Boas-vindas */}
           <section className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
+              {/* SAUDAÇÃO PERSONALIZADA COM O NOME DA EMPRESA */}
               <h2 className="text-2xl font-bold tracking-tight">
                 Olá! Boas-vindas 👋
               </h2>
@@ -202,7 +203,7 @@ export default function PainelPage() {
               </div>
             </article>
 
-            {/* Acesso rápido finalizado */}
+            {/* Acesso rápido */}
             <article className="rounded-2xl border border-slate-200 bg-white p-6 flex flex-col justify-between">
               <div>
                 <h3 className="font-bold">Acesso rápido</h3>
