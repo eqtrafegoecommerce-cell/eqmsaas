@@ -1,21 +1,53 @@
-// src/app/loja/[slug]/carrinho/page.tsx
+import { Suspense } from 'react'
 
-// 1. Defina a tipagem correta para o parâmetro dinâmico da URL
-interface CarrinhoProps {
-  params: Promise<{
-    slug: string;
-  }>;
+type CheckoutProps = {
+  isOpen: boolean
+  onClose: () => void
+  total: number
+  subtotal: number
+  onFinalizar: (dados: any) => Promise<void>
+  carregando: boolean
 }
 
-// 2. Garanta que a função use "async" e seja exportada como "default"
-export default async function CarrinhoPage({ params }: CarrinhoProps) {
-  // Desembrulha o parâmetro de forma segura
-  const { slug } = await params;
+function Checkout({ isOpen, onClose, total, subtotal, onFinalizar, carregando }: CheckoutProps) {
+  if (!isOpen) return null
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Carrinho da loja: {slug}</h1>
-      <p>Ajuste o conteúdo interno do seu carrinho aqui.</p>
-    </div>
-  );
+    <section aria-label="Resumo do carrinho">
+      <p>Subtotal: {subtotal}</p>
+      <p>Total: {total}</p>
+      <button type="button" onClick={onClose}>Fechar</button>
+      <button
+        type="button"
+        disabled={carregando}
+        onClick={() => void onFinalizar({ subtotal, total })}
+      >
+        Finalizar compra
+      </button>
+    </section>
+  )
+}
+
+export const instant = false; // Desativando a renderização instantânea para esta página  
+
+export default function CarrinhoPage() {
+  // Criamos funções e valores padrão para satisfazer os requisitos do componente Checkout
+  const dadosMockadosDoCarrinho = {
+    isOpen: true,
+    onClose: () => console.log("Fechar carrinho"),
+    total: 0,
+    subtotal: 0,
+    onFinalizar: async (dados: any) => console.log("Finalizando...", dados),
+    carregando: false
+  };
+
+  return (
+    <main>
+      <h1>Seu Carrinho</h1>
+      <Suspense fallback={<p>Carregando itens do carrinho...</p>}>
+        {/* Passamos as propriedades obrigatórias usando o operador spread (...) */}
+        <Checkout {...dadosMockadosDoCarrinho} />
+      </Suspense>
+    </main>
+  )
 }
