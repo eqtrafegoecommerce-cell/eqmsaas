@@ -1,3 +1,5 @@
+'use client';
+
 import { Suspense } from 'react'
 
 type CheckoutProps = {
@@ -27,8 +29,6 @@ function Checkout({ isOpen, onClose, total, subtotal, onFinalizar, carregando }:
     </section>
   )
 }
-
-export const instant = false; // Desativando a renderização instantânea para esta página  
 
 export default function CarrinhoPage() {
   // Criamos funções e valores padrão para satisfazer os requisitos do componente Checkout

@@ -7,13 +7,13 @@ import Checkout from './components/checkout';
 import { createOrder } from '@/lib/supabase/store';
 
 interface LojaProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default function LojaPublica({ params }: LojaProps) {
-  const { slug } = params;
+  const { slug } = use(params);
 
   // Estados para armazenar os dados vindos do Supabase
   const [loja, setLoja] = useState<any>(null);
